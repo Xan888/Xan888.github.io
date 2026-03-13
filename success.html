@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Key - XanHub</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#0d1117; color:#c9d1d9; text-align:center; padding:60px 20px; }
+    h1 { color:#3fb950; }
+    #key { background:#161b22; padding:20px; border-radius:8px; font-size:24px; word-break:break-all; margin:30px auto; max-width:500px; }
+    button { background:#238636; color:white; border:none; padding:12px 24px; font-size:18px; border-radius:6px; cursor:pointer; }
+    button:hover { background:#2ea043; }
+  </style>
+</head>
+<body>
+  <h1>✅ Key Received!</h1>
+  <p>Your key (copy & paste into Roblox):</p>
+  <div id="key">Loading...</div>
+  
+  <button onclick="copyKey()">Copy Key</button>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key');
+    
+    if (key) {
+      document.getElementById('key').textContent = key;
+    } else {
+      document.getElementById('key').textContent = "No key received. Try completing the checkpoint again.";
+      document.getElementById('key').style.color = "#f85149";
+    }
+
+    function copyKey() {
+      if (key) {
+        navigator.clipboard.writeText(key);
+        alert("Key copied! Go paste it in Roblox.");
+      }
+    }
+  </script>
+</body>
+</html>
