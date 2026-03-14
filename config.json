@@ -1,0 +1,77 @@
+{
+  "_comment": "XAN'S HUB — SITE CONFIG. Edit this file to update the website without touching HTML.",
+
+  "siteName": "Xan's Hub",
+  "tagline": "The most powerful Roblox script hub.",
+  "version": "v1.0.0",
+  "author": "Xan",
+
+  "status": "online",
+  "_status_options": "online | updating | offline",
+  "statusMessages": {
+    "online":   "All scripts up to date",
+    "updating": "Update in progress — check back soon",
+    "offline":  "Scripts temporarily down for maintenance"
+  },
+
+  "keySystemUrl":  "/keysystem",
+  "keySuccessUrl": "/keysystem/success",
+
+  "games": [
+    {
+      "id":          "bgsi",
+      "name":        "Bubble Gum Simulator Infinity",
+      "shortName":   "BGSI",
+      "icon":        "🫧",
+      "description": "Full-featured farming & teleport script for BGSI.",
+      "features":    ["Auto Farm", "Teleport"],
+      "scriptUrl":   "https://raw.githubusercontent.com/xan888/hub/main/scripts/bgsi.lua",
+      "status":      "active",
+      "_status_options": "active | beta | updating | coming_soon"
+    }
+  ],
+
+  "_game_template": {
+    "id":          "game-id",
+    "name":        "Full Game Name",
+    "shortName":   "SHORT",
+    "icon":        "🎮",
+    "description": "Short description of what the script does.",
+    "features":    ["Feature 1", "Feature 2", "Feature 3"],
+    "scriptUrl":   "https://raw.githubusercontent.com/xan888/hub/main/scripts/game.lua",
+    "status":      "active"
+  },
+
+  "changelog": [
+    {
+      "version": "v1.0.0",
+      "date":    "2026-03-14",
+      "label":   "release",
+      "_label_options": "release | update | fix | hotfix",
+      "notes":   "Initial release. BGSI Auto Farm & Teleport live."
+    }
+  ],
+
+  "faq": [
+    {
+      "q": "What executor do I need?",
+      "a": "Any supported executor works — Delta, Solara, Synapse, etc."
+    },
+    {
+      "q": "Why do I need a key?",
+      "a": "Keys help keep the hub free by supporting development. They only take about a minute to get."
+    },
+    {
+      "q": "How do I use the script?",
+      "a": "Get your key, open your executor in Roblox, paste the loadstring, and execute."
+    },
+    {
+      "q": "Is this safe to use?",
+      "a": "Scripts are tested before every release, but always use an alt account to be safe."
+    },
+    {
+      "q": "How often are scripts updated?",
+      "a": "Scripts are updated as soon as possible after game patches. Check the changelog for details."
+    }
+  ]
+}
