@@ -52,6 +52,25 @@
     }
   ],
 
+  "keySystemFaq": [
+    {
+      "q": "How long does the key last?",
+      "a": "Keys are valid for 24 hours. After that, you'll need to complete the checkpoint again."
+    },
+    {
+      "q": "The checkpoint isn't working — what do I do?",
+      "a": "Try disabling your ad blocker or switching browsers. If it still doesn't work, wait a few minutes and try again."
+    },
+    {
+      "q": "I completed the checkpoint but got no key.",
+      "a": "Make sure you completed every task. If you were redirected but see no key, go back and try the checkpoint again."
+    },
+    {
+      "q": "Where do I paste the key?",
+      "a": "Paste it into the executor UI when prompted after running the loadstring script in Roblox."
+    }
+  ],
+
   "faq": [
     {
       "q": "What executor do I need?",
