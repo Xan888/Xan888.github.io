@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Xan's Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:           #05070a;
+      --surface:      #0c0f14;
+      --border:       rgba(160,175,195,0.1);
+      --border-hover: rgba(160,175,195,0.22);
+      --accent:       #a0afbf;
+      --accent-bright:#c8d6e0;
+      --accent-dim:   rgba(160,175,195,0.35);
+      --text:         #cdd5de;
+      --muted:        #4a5568;
+      --steel:        #6b7f8f;
+      --success:      #6aab7e;
+      --warning:      #a09060;
+      --error:        #a06a6a;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+    /* ── Backgrounds ── */
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(160,175,195,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(160,175,195,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridDrift 24s linear infinite;
+    }
+    @keyframes gridDrift { to { background-position: 60px 60px; } }
+    .bg-glow { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -15%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(100,130,155,0.07) 0%, transparent 70%);
+      animation: pulse 7s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:.5; transform:translateX(-50%) scale(1); }
+      50%      { opacity:1;  transform:translateX(-50%) scale(1.1); }
+    }
+    .vignette {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.72) 100%);
+    }
+    .scanlines {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(5,7,10,0.75);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 0.08em;
+      color: var(--accent-bright); text-decoration: none;
+    }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-status { display: flex; align-items: center; gap: 8px; }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      animation: blink 2.5s ease-in-out infinite;
+    }
+    .status-dot.online   { background: var(--success); box-shadow: 0 0 6px rgba(106,171,126,.6); }
+    .status-dot.updating { background: var(--warning); box-shadow: 0 0 6px rgba(160,144,96,.6); }
+    .status-dot.offline  { background: var(--error);   box-shadow: 0 0 6px rgba(160,106,106,.6); }
+    .status-text { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    section { position: relative; z-index: 3; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(160,175,195,0.06); border: 1px solid rgba(160,175,195,0.15);
+      border-radius: 999px; padding: 6px 18px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--steel); margin-bottom: 32px;
+      opacity: 0; animation: fadeUp .6s .1s forwards;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 6px var(--accent-dim);
+      animation: blink 2.5s ease-in-out infinite;
+    }
+    .hero-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 13vw, 130px); line-height: .9;
+      letter-spacing: .03em; margin-bottom: 28px;
+      opacity: 0; animation: fadeUp .7s .25s forwards;
+    }
+    .hero-heading .line1 {
+      display: block;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-bright) 50%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-heading .line2 {
+      display: block; font-size: clamp(32px, 6vw, 56px);
+      background: linear-gradient(135deg, var(--muted) 0%, var(--steel) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      letter-spacing: .06em;
+    }
+    .hero-sub {
+      font-size: 16px; font-weight: 300; color: var(--muted);
+      max-width: 420px; line-height: 1.7; margin-bottom: 48px;
+      opacity: 0; animation: fadeUp .7s .4s forwards;
+    }
+    .hero-actions {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: fadeUp .7s .55s forwards;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #8fa0b0 0%, #4a5e6e 100%);
+      color: #05070a; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      text-decoration: none; border-radius: 10px;
+      transition: transform .2s, filter .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px) scale(1.01); filter: brightness(1.1); }
+    .btn-primary:active { transform: scale(.99); }
+    .btn-icon-wrap {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; background: rgba(0,0,0,.18);
+      border-radius: 6px; font-size: 13px; transition: transform .2s;
+    }
+    .btn-primary:hover .btn-icon-wrap { transform: rotate(45deg); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 28px; background: transparent;
+      border: 1px solid var(--border-hover); color: var(--accent);
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      text-decoration: none; border-radius: 10px;
+      transition: border-color .2s, background .2s, transform .2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: rgba(160,175,195,.05); transform: translateY(-2px); }
+
+    /* ── Section header ── */
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 6vw, 56px); letter-spacing: .04em;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* ── Games ── */
+    #scripts { padding: 100px 0; }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .game-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+      position: relative; overflow: hidden;
+      transition: border-color .3s, transform .25s;
+    }
+    .game-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .game-card::before {
+      content: ''; position: absolute; top:0; left:0; right:0; height:1px;
+      background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+    }
+    .game-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .game-icon {
+      font-size: 28px; width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(160,175,195,.05); border: 1px solid var(--border); border-radius: 12px;
+    }
+    .game-info-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .05em; color: var(--accent-bright); }
+    .game-info-short { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .game-status-badge {
+      margin-left: auto; font-size: 10px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+    }
+    .game-status-badge.active      { color:var(--success); background:rgba(106,171,126,.1); border:1px solid rgba(106,171,126,.2); }
+    .game-status-badge.beta        { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
+    .game-status-badge.updating    { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
+    .game-status-badge.coming_soon { color:var(--muted);   background:rgba(74,86,104,.1);   border:1px solid rgba(74,86,104,.2); }
+    .game-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+    .game-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .feature-tag {
+      font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--steel); background: rgba(160,175,195,.05);
+      border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px;
+    }
+    .copy-script-btn {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 16px; background: rgba(160,175,195,.04); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--accent);
+      font-family: 'DM Mono','Courier New',monospace; font-size: 12px;
+      cursor: pointer; transition: border-color .2s, background .2s; text-align: left;
+    }
+    .copy-script-btn:hover { border-color: var(--border-hover); background: rgba(160,175,195,.07); }
+    .copy-script-label { color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:3px; font-family:'DM Sans',sans-serif; }
+    .copy-script-text  { color:var(--accent-bright); font-size:11px; word-break:break-all; }
+    .copy-script-icon  { flex-shrink:0; margin-left:12px; font-size:15px; color:var(--muted); transition:color .2s; }
+    .copy-script-btn:hover .copy-script-icon { color: var(--accent); }
+
+    /* ── Changelog ── */
+    #changelog { padding: 100px 0; }
+    .changelog-list { display: flex; flex-direction: column; max-width: 640px; margin: 0 auto; }
+    .changelog-item { display: flex; gap: 20px; padding: 20px 0; position: relative; }
+    .changelog-item:not(:last-child)::after {
+      content: ''; position: absolute; left: 11px; top: 44px; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .changelog-dot {
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 1px solid var(--border-hover); background: var(--surface);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+    }
+    .changelog-dot-inner { width: 7px; height: 7px; border-radius: 50%; background: var(--steel); }
+    .changelog-dot.release .changelog-dot-inner { background: var(--success); }
+    .changelog-dot.hotfix  .changelog-dot-inner { background: var(--error); }
+    .changelog-dot.update  .changelog-dot-inner { background: var(--accent); }
+    .changelog-dot.fix     .changelog-dot-inner { background: var(--warning); }
+    .changelog-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+    .changelog-version { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.05em; color:var(--accent-bright); }
+    .changelog-label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; padding:3px 9px; border-radius:999px; }
+    .changelog-label.release { color:var(--success); background:rgba(106,171,126,.1); border:1px solid rgba(106,171,126,.2); }
+    .changelog-label.update  { color:var(--accent);  background:rgba(160,175,195,.08); border:1px solid var(--border); }
+    .changelog-label.fix     { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
+    .changelog-label.hotfix  { color:var(--error);   background:rgba(160,106,106,.1); border:1px solid rgba(160,106,106,.2); }
+    .changelog-date { font-size:11px; color:var(--muted); margin-left:auto; }
+    .changelog-notes { font-size:14px; color:var(--muted); line-height:1.6; font-weight:300; }
+
+    /* ── FAQ ── */
+    #faq { padding: 100px 0; }
+    .faq-list { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:border-color .3s; }
+    .faq-item:hover { border-color: var(--border-hover); }
+    .faq-question {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px; background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 500;
+      color: var(--text); text-align: left; gap: 16px;
+    }
+    .faq-chevron { flex-shrink:0; font-size:16px; color:var(--muted); transition:transform .3s; }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .35s ease;
+      font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.7; padding: 0 22px;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding: 0 22px 18px; }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 3;
+      border-top: 1px solid var(--border); padding: 40px 24px;
+    }
+    .footer-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.08em; color:var(--steel); }
+    .footer-note { font-size:12px; color:var(--muted); font-weight:300; letter-spacing:.04em; }
+    .footer-version { font-size:11px; color:var(--muted); letter-spacing:.1em; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface); border: 1px solid rgba(106,171,126,.3);
+      color: var(--success); font-size: 13px; font-weight: 500;
+      letter-spacing: .08em; padding: 12px 24px; border-radius: 999px;
+      opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; z-index: 1000;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .hero-actions { flex-direction: column; width: 100%; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars"></canvas>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="vignette"></div>
+  <div class="scanlines"></div>
+
+  <nav>
+    <a class="nav-logo" href="#">Xan's Hub</a>
+    <div class="nav-links">
+      <a href="#scripts">Scripts</a>
+      <a href="#changelog">Changelog</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-status">
+      <span class="status-dot" id="nav-status-dot"></span>
+      <span class="status-text" id="nav-status-text"></span>
+    </div>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      <span id="hero-badge-label"></span>
+    </div>
+    <h1 class="hero-heading">
+      <span class="line1">Xan's Hub</span>
+      <span class="line2" id="hero-tagline"></span>
+    </h1>
+    <p class="hero-sub">Free, powerful Roblox scripts. Get your key in seconds and start dominating.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" id="hero-cta" href="#">
+        <span class="btn-icon-wrap">✦</span>
+        Get Your Key
+      </a>
+      <a class="btn-secondary" href="#scripts">View Scripts</a>
+    </div>
+  </section>
+
+  <section id="scripts">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">Supported Games</p>
+        <h2 class="section-title">Scripts</h2>
+      </div>
+      <div class="games-grid" id="games-grid"></div>
+    </div>
+  </section>
+
+  <section id="changelog">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">What's New</p>
+        <h2 class="section-title">Changelog</h2>
+      </div>
+      <div class="changelog-list" id="changelog-list"></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">Got Questions?</p>
+        <h2 class="section-title">FAQ</h2>
+      </div>
+      <div class="faq-list" id="faq-list"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-logo" id="footer-logo"></span>
+      <span class="footer-note">Made by <span id="footer-author"></span> · Free forever</span>
+      <span class="footer-version" id="footer-version"></span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">✦ Script copied to clipboard</div>
+
+  <script>
+    // Config is loaded from config.json — edit that file to update the site.
+    fetch('config.json')
+      .then(r => r.json())
+      .then(C => init(C))
+      .catch(err => console.error('Could not load config.json:', err));
+
+    function init(C) {
+      // Nav status
+      const dot = document.getElementById('nav-status-dot');
+      dot.classList.add(C.status);
+      document.getElementById('nav-status-text').textContent = C.statusMessages[C.status];
+
+      // Hero
+      document.getElementById('hero-badge-label').textContent = C.version + ' — ' + C.statusMessages[C.status];
+      document.getElementById('hero-tagline').textContent = C.tagline;
+      document.getElementById('hero-cta').href = C.keySystemUrl;
+
+      // Footer
+      document.getElementById('footer-logo').textContent = C.siteName;
+      document.getElementById('footer-author').textContent = C.author;
+      document.getElementById('footer-version').textContent = C.version;
+
+      // Games
+      const gamesGrid = document.getElementById('games-grid');
+      if (!C.games || C.games.length === 0) {
+        gamesGrid.innerHTML = `<p style="color:var(--muted);font-size:14px;text-align:center;grid-column:1/-1;padding:40px 0">No scripts available yet — check back soon.</p>`;
+      } else {
+        C.games.forEach(game => {
+          const ls = `loadstring(game:HttpGet("${game.scriptUrl}"))()`;
+          const statusLabel = { active:'Active', beta:'Beta', updating:'Updating', coming_soon:'Coming Soon' }[game.status] || game.status;
+          gamesGrid.innerHTML += `
+            <div class="game-card">
+              <div class="game-card-header">
+                <div class="game-icon">${game.icon}</div>
+                <div>
+                  <div class="game-info-name">${game.shortName}</div>
+                  <div class="game-info-short">${game.name}</div>
+                </div>
+                <span class="game-status-badge ${game.status}">${statusLabel}</span>
+              </div>
+              <p class="game-desc">${game.description}</p>
+              <div class="game-features">${game.features.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
+              <button class="copy-script-btn" onclick="copyScript('${game.id}', \`${ls}\`)">
+                <div>
+                  <span class="copy-script-label">Execute in Roblox</span>
+                  <span class="copy-script-text">${ls}</span>
+                </div>
+                <span class="copy-script-icon" id="csi-${game.id}">⎘</span>
+              </button>
+            </div>`;
+        });
+      }
+
+      // Changelog
+      const cl = document.getElementById('changelog-list');
+      C.changelog.slice(0, 6).forEach(e => {
+        cl.innerHTML += `
+          <div class="changelog-item">
+            <div class="changelog-dot ${e.label}"><div class="changelog-dot-inner"></div></div>
+            <div style="flex:1">
+              <div class="changelog-meta">
+                <span class="changelog-version">${e.version}</span>
+                <span class="changelog-label ${e.label}">${e.label}</span>
+                <span class="changelog-date">${e.date}</span>
+              </div>
+              <p class="changelog-notes">${e.notes}</p>
+            </div>
+          </div>`;
+      });
+
+      // FAQ
+      const fl = document.getElementById('faq-list');
+      C.faq.forEach((item, i) => {
+        fl.innerHTML += `
+          <div class="faq-item" id="faq-${i}">
+            <button class="faq-question" onclick="toggleFaq(${i})">
+              ${item.q}<span class="faq-chevron">⌄</span>
+            </button>
+            <div class="faq-answer">${item.a}</div>
+          </div>`;
+      });
+    }
+
+    function toggleFaq(i) { document.getElementById('faq-'+i).classList.toggle('open'); }
+
+    function copyScript(id, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const icon = document.getElementById('csi-'+id);
+        icon.textContent = '✓';
+        const t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(() => { t.classList.remove('show'); icon.textContent = '⎘'; }, 2200);
+      });
+    }
+
+    // ── Star field ──
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars=[], W, H;
+    function resize() { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+    function initStars(n=280) {
+      stars=[];
+      for(let i=0;i<n;i++) stars.push({
+        x:Math.random()*W, y:Math.random()*H,
+        r:Math.random()*1.1+.15,
+        phase:Math.random()*Math.PI*2,
+        speed:Math.random()*.003+.001,
+        drift:(Math.random()-.5)*.04,
+      });
+    }
+    function draw(t) {
+      ctx.clearRect(0,0,W,H);
+      for(const s of stars){
+        const a=.1+.5*(.5+.5*Math.sin(s.phase+t*s.speed*60));
+        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(185,200,215,${a})`; ctx.fill();
+        s.x+=s.drift;
+        if(s.x<0)s.x=W; if(s.x>W)s.x=0;
+      }
+    }
+    function loop(t){ draw(t/1000); requestAnimationFrame(loop); }
+    resize(); initStars(); requestAnimationFrame(loop);
+    window.addEventListener('resize',()=>{resize();initStars();});
+  </script>
+
+</body>
+</html>
