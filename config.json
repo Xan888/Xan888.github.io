@@ -14,8 +14,8 @@
     "offline":  "Scripts temporarily down for maintenance"
   },
 
-  "keySystemUrl":  "/keysystem",
-  "keySuccessUrl": "/keysystem/success",
+  "keySystemUrl":  "/key-system",
+  "keySuccessUrl": "/key-system/success",
 
   "games": [
     {
