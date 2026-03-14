@@ -540,7 +540,7 @@
       (C.keySystemFaq || []).forEach((item, i) => {
         ksf.innerHTML += `
           <div class="faq-item" id="ksfaq-${i}">
-            <button class="faq-question" onclick="toggleFaq('ksfaq-${i}')">
+            <button class="faq-question" onclick="toggleKsFaq(${i})">
               ${item.q}<span class="faq-chevron">⌄</span>
             </button>
             <div class="faq-answer">${item.a}</div>
@@ -560,10 +560,8 @@
       });
     }
 
-    function toggleFaq(id) {
-      const el = typeof id === 'number' ? document.getElementById('faq-'+id) : document.getElementById(id);
-      if (el) el.classList.toggle('open');
-    }
+    function toggleFaq(i) { document.getElementById('faq-'+i).classList.toggle('open'); }
+    function toggleKsFaq(i) { document.getElementById('ksfaq-'+i).classList.toggle('open'); }
 
     function copyScript(id, text) {
       navigator.clipboard.writeText(text).then(() => {
