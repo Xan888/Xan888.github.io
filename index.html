@@ -279,18 +279,7 @@
       color: var(--steel); background: rgba(160,175,195,.05);
       border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px;
     }
-    .copy-script-btn {
-      width: 100%; display: flex; align-items: center; justify-content: space-between;
-      padding: 13px 16px; background: rgba(160,175,195,.04); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--accent);
-      font-family: 'DM Mono','Courier New',monospace; font-size: 12px;
-      cursor: pointer; transition: border-color .2s, background .2s; text-align: left;
-    }
-    .copy-script-btn:hover { border-color: var(--border-hover); background: rgba(160,175,195,.07); }
-    .copy-script-label { color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:3px; font-family:'DM Sans',sans-serif; }
-    .copy-script-text  { color:var(--accent-bright); font-size:11px; word-break:break-all; }
-    .copy-script-icon  { flex-shrink:0; margin-left:12px; font-size:15px; color:var(--muted); transition:color .2s; }
-    .copy-script-btn:hover .copy-script-icon { color: var(--accent); }
+
 
     /* ── Changelog ── */
     #changelog { padding: 100px 0; }
@@ -462,7 +451,7 @@
 
     <!-- Main loadstring -->
     <div class="main-script-banner">
-      <p class="main-script-label">Universal Loadstring — Execute in any of our supported games</p>
+      <p class="main-script-label">Universal Loadstring — Execute in any game</p>
       <div class="main-script-box">
         <span class="main-script-code" id="main-script-code"></span>
         <button class="main-script-copy" id="main-script-copy-btn" title="Copy loadstring">⎘</button>
@@ -531,20 +520,23 @@
 
   <script>
     // ── Roblox thumbnail fetcher ──
-    // Uses the Roblox thumbnails API via a CORS-friendly approach.
-    // We fetch universeId from placeId, then fetch the thumbnail.
+    // Roblox APIs block direct browser requests (CORS), so we use
+    // a public CORS proxy to relay the JSON responses.
+    const PROXY = 'https://corsproxy.io/?url=';
+
     async function getRobloxImages(placeId) {
       try {
         // Step 1: placeId → universeId
-        const uRes = await fetch(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`);
+        const uRes = await fetch(PROXY + encodeURIComponent(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`));
         if (!uRes.ok) throw new Error('universe fetch failed');
         const uData = await uRes.json();
         const universeId = uData.universeId;
+        if (!universeId) throw new Error('no universeId');
 
         // Step 2: fetch thumbnail (banner) and icon in parallel
         const [thumbRes, iconRes] = await Promise.all([
-          fetch(`https://thumbnails.roblox.com/v1/games/multiget/thumbnails?universeIds=${universeId}&countPerUniverse=1&defaults=true&size=768x432&format=Png`),
-          fetch(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&returnPolicy=PlaceHolder&size=150x150&format=Png`)
+          fetch(PROXY + encodeURIComponent(`https://thumbnails.roblox.com/v1/games/multiget/thumbnails?universeIds=${universeId}&countPerUniverse=1&defaults=true&size=768x432&format=Png`)),
+          fetch(PROXY + encodeURIComponent(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&returnPolicy=PlaceHolder&size=150x150&format=Png`))
         ]);
 
         const thumbData = await thumbRes.json();
@@ -595,7 +587,6 @@
       } else {
         // Render cards with placeholders first, then fill images async
         C.games.forEach(game => {
-          const ls = `loadstring(game:HttpGet("${game.scriptUrl}"))()`;
           const statusLabel = { active:'Active', beta:'Beta', updating:'Updating', coming_soon:'Coming Soon' }[game.status] || game.status;
 
           gamesGrid.innerHTML += `
@@ -617,13 +608,6 @@
                 </div>
                 <p class="game-desc">${game.description}</p>
                 <div class="game-features">${game.features.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
-                <button class="copy-script-btn" onclick="copyScript('${game.id}', \`${ls}\`)">
-                  <div>
-                    <span class="copy-script-label">Execute in Roblox</span>
-                    <span class="copy-script-text">${ls}</span>
-                  </div>
-                  <span class="copy-script-icon" id="csi-${game.id}">⎘</span>
-                </button>
               </div>
             </div>`;
 
@@ -692,14 +676,6 @@
 
     function toggleFaq(i) { document.getElementById('faq-'+i).classList.toggle('open'); }
     function toggleKsFaq(i) { document.getElementById('ksfaq-'+i).classList.toggle('open'); }
-
-    function copyScript(id, text) {
-      navigator.clipboard.writeText(text).then(() => {
-        document.getElementById('csi-'+id).textContent = '✓';
-        showToast('✦ Script copied to clipboard');
-        setTimeout(() => { document.getElementById('csi-'+id).textContent = '⎘'; }, 2200);
-      });
-    }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
