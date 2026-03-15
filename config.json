@@ -17,13 +17,15 @@
   "keySystemUrl":  "/keysystem",
   "keySuccessUrl": "/keysystem/success",
 
+  "mainScript": "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/Xan888/XanHub/refs/heads/main/init.lua\"))()",
+
   "games": [
     {
       "id":          "bgsi",
+      "placeId":     "8737899170",
       "name":        "Bubble Gum Simulator Infinity",
       "shortName":   "BGSI",
-      "icon":        "🫧",
-      "description": "Full-featured farming & teleport script for BGSI.",
+      "description": "Full-featured auto farming & logging script for BGSI.",
       "features":    ["Auto Farm", "Teleport"],
       "scriptUrl":   "https://raw.githubusercontent.com/xan888/hub/main/scripts/bgsi.lua",
       "status":      "active",
@@ -33,9 +35,9 @@
 
   "_game_template": {
     "id":          "game-id",
+    "placeId":     "000000000",
     "name":        "Full Game Name",
     "shortName":   "SHORT",
-    "icon":        "🎮",
     "description": "Short description of what the script does.",
     "features":    ["Feature 1", "Feature 2", "Feature 3"],
     "scriptUrl":   "https://raw.githubusercontent.com/xan888/hub/main/scripts/game.lua",
