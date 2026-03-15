@@ -520,14 +520,12 @@
 
   <script>
     // ── Roblox thumbnail fetcher ──
-    // Roblox APIs block direct browser requests (CORS), so we use
-    // a public CORS proxy to relay the JSON responses.
-    const PROXY = 'https://corsproxy.io/?url=';
-
+    // RoTunnel is a community Roblox API proxy — just replace
+    // 'roblox.com' with 'rotunnel.com' for full CORS support.
     async function getRobloxImages(placeId) {
       try {
         // Step 1: placeId → universeId
-        const uRes = await fetch(PROXY + encodeURIComponent(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`));
+        const uRes = await fetch(`https://apis.rotunnel.com/universes/v1/places/${placeId}/universe`);
         if (!uRes.ok) throw new Error('universe fetch failed');
         const uData = await uRes.json();
         const universeId = uData.universeId;
@@ -535,8 +533,8 @@
 
         // Step 2: fetch thumbnail (banner) and icon in parallel
         const [thumbRes, iconRes] = await Promise.all([
-          fetch(PROXY + encodeURIComponent(`https://thumbnails.roblox.com/v1/games/multiget/thumbnails?universeIds=${universeId}&countPerUniverse=1&defaults=true&size=768x432&format=Png`)),
-          fetch(PROXY + encodeURIComponent(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&returnPolicy=PlaceHolder&size=150x150&format=Png`))
+          fetch(`https://thumbnails.rotunnel.com/v1/games/multiget/thumbnails?universeIds=${universeId}&countPerUniverse=1&defaults=true&size=768x432&format=Png`),
+          fetch(`https://thumbnails.rotunnel.com/v1/games/icons?universeIds=${universeId}&returnPolicy=PlaceHolder&size=150x150&format=Png`)
         ]);
 
         const thumbData = await thumbRes.json();
@@ -547,6 +545,7 @@
 
         return { thumbnailUrl, iconUrl };
       } catch (e) {
+        console.warn('Roblox image fetch failed:', e);
         return { thumbnailUrl: null, iconUrl: null };
       }
     }
