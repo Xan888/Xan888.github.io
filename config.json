@@ -26,8 +26,7 @@
       "name":        "Bubble Gum Simulator Infinity",
       "shortName":   "BGSI",
       "description": "Full-featured auto farming & logging script for BGSI.",
-      "features":    ["Auto Farm", "Teleport"],
-      "scriptUrl":   "https://raw.githubusercontent.com/xan888/hub/main/scripts/bgsi.lua",
+      "features":    ["Auto Farm", "Webhook logging"],
       "status":      "active",
       "_status_options": "active | beta | updating | coming_soon"
     }
@@ -40,7 +39,6 @@
     "shortName":   "SHORT",
     "description": "Short description of what the script does.",
     "features":    ["Feature 1", "Feature 2", "Feature 3"],
-    "scriptUrl":   "https://raw.githubusercontent.com/xan888/hub/main/scripts/game.lua",
     "status":      "active"
   },
 
