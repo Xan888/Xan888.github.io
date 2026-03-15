@@ -139,6 +139,36 @@
       opacity: 0; animation: fadeUp .7s .55s forwards;
     }
 
+    /* ── Main Script Banner ── */
+    .main-script-banner {
+      width: 100%; max-width: 600px; margin-top: 40px;
+      opacity: 0; animation: fadeUp .7s .7s forwards;
+    }
+    .main-script-label {
+      font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px; text-align: center;
+    }
+    .main-script-box {
+      display: flex; align-items: center; gap: 0;
+      background: rgba(160,175,195,.04); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      transition: border-color .2s;
+    }
+    .main-script-box:hover { border-color: var(--border-hover); }
+    .main-script-code {
+      flex: 1; padding: 14px 18px;
+      font-family: 'DM Mono', 'Courier New', monospace; font-size: 12px;
+      color: var(--accent-bright); white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .main-script-copy {
+      flex-shrink: 0; padding: 14px 18px;
+      background: rgba(160,175,195,.06); border: none; border-left: 1px solid var(--border);
+      color: var(--muted); font-size: 15px; cursor: pointer;
+      transition: color .2s, background .2s;
+    }
+    .main-script-copy:hover { color: var(--accent-bright); background: rgba(160,175,195,.1); }
+
     /* ── Buttons ── */
     .btn-primary {
       display: inline-flex; align-items: center; gap: 10px;
@@ -186,37 +216,64 @@
     }
 
     /* ── Games ── */
-    #scripts { padding: 100px 0; }
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    #games { padding: 100px 0; }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .game-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 28px;
-      position: relative; overflow: hidden;
+      border-radius: 16px; overflow: hidden;
+      position: relative;
       transition: border-color .3s, transform .25s;
     }
     .game-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
-    .game-card::before {
-      content: ''; position: absolute; top:0; left:0; right:0; height:1px;
-      background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+
+    /* Game thumbnail banner */
+    .game-thumbnail-wrap {
+      width: 100%; height: 160px; overflow: hidden;
+      position: relative; background: rgba(160,175,195,.04);
     }
-    .game-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .game-icon {
-      font-size: 28px; width: 48px; height: 48px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(160,175,195,.05); border: 1px solid var(--border); border-radius: 12px;
+    .game-thumbnail-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .4s ease;
+      display: block;
     }
-    .game-info-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .05em; color: var(--accent-bright); }
+    .game-card:hover .game-thumbnail-wrap img { transform: scale(1.04); }
+    .game-thumbnail-wrap .game-thumbnail-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(12,15,20,0.95) 100%);
+    }
+    .game-thumbnail-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 40px; background: rgba(160,175,195,.04);
+    }
+
+    /* Icon pinned over thumbnail */
+    .game-icon-pin {
+      position: absolute; bottom: -20px; left: 20px;
+      width: 52px; height: 52px; border-radius: 12px;
+      border: 2px solid var(--border); overflow: hidden;
+      background: var(--surface); z-index: 2;
+    }
+    .game-icon-pin img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .game-icon-pin-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; background: rgba(160,175,195,.06);
+    }
+
+    .game-card-body { padding: 32px 22px 22px; }
+    .game-card-header { display: flex; align-items: flex-start; margin-bottom: 12px; }
+    .game-info { flex: 1; }
+    .game-info-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .05em; color: var(--accent-bright); line-height: 1; margin-bottom: 3px; }
     .game-info-short { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
     .game-status-badge {
       margin-left: auto; font-size: 10px; font-weight: 600;
-      letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+      letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; flex-shrink: 0;
     }
     .game-status-badge.active      { color:var(--success); background:rgba(106,171,126,.1); border:1px solid rgba(106,171,126,.2); }
     .game-status-badge.beta        { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
     .game-status-badge.updating    { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
     .game-status-badge.coming_soon { color:var(--muted);   background:rgba(74,86,104,.1);   border:1px solid rgba(74,86,104,.2); }
-    .game-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
-    .game-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .game-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+    .game-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .feature-tag {
       font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
       color: var(--steel); background: rgba(160,175,195,.05);
@@ -374,7 +431,7 @@
   <nav>
     <a class="nav-logo" href="#">Xan's Hub</a>
     <div class="nav-links">
-      <a href="#scripts">Scripts</a>
+      <a href="#games">Games</a>
       <a href="#changelog">Changelog</a>
       <a href="#keysystem">Key System</a>
       <a href="#faq">FAQ</a>
@@ -400,15 +457,24 @@
         <span class="btn-icon-wrap">✦</span>
         Get Your Key
       </a>
-      <a class="btn-secondary" href="#scripts">View Scripts</a>
+      <a class="btn-secondary" href="#games">View Games</a>
+    </div>
+
+    <!-- Main loadstring -->
+    <div class="main-script-banner">
+      <p class="main-script-label">Universal Loadstring — Execute in any of our supported games</p>
+      <div class="main-script-box">
+        <span class="main-script-code" id="main-script-code"></span>
+        <button class="main-script-copy" id="main-script-copy-btn" title="Copy loadstring">⎘</button>
+      </div>
     </div>
   </section>
 
-  <section id="scripts">
+  <section id="games">
     <div class="container">
       <div class="section-header">
         <p class="section-eyebrow">Supported Games</p>
-        <h2 class="section-title">Scripts</h2>
+        <h2 class="section-title">Games</h2>
       </div>
       <div class="games-grid" id="games-grid"></div>
     </div>
@@ -461,16 +527,45 @@
     </div>
   </footer>
 
-  <div class="toast" id="toast">✦ Script copied to clipboard</div>
+  <div class="toast" id="toast">✦ Copied to clipboard</div>
 
   <script>
+    // ── Roblox thumbnail fetcher ──
+    // Uses the Roblox thumbnails API via a CORS-friendly approach.
+    // We fetch universeId from placeId, then fetch the thumbnail.
+    async function getRobloxImages(placeId) {
+      try {
+        // Step 1: placeId → universeId
+        const uRes = await fetch(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`);
+        if (!uRes.ok) throw new Error('universe fetch failed');
+        const uData = await uRes.json();
+        const universeId = uData.universeId;
+
+        // Step 2: fetch thumbnail (banner) and icon in parallel
+        const [thumbRes, iconRes] = await Promise.all([
+          fetch(`https://thumbnails.roblox.com/v1/games/multiget/thumbnails?universeIds=${universeId}&countPerUniverse=1&defaults=true&size=768x432&format=Png`),
+          fetch(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&returnPolicy=PlaceHolder&size=150x150&format=Png`)
+        ]);
+
+        const thumbData = await thumbRes.json();
+        const iconData  = await iconRes.json();
+
+        const thumbnailUrl = thumbData?.data?.[0]?.thumbnails?.[0]?.imageUrl || null;
+        const iconUrl      = iconData?.data?.[0]?.imageUrl || null;
+
+        return { thumbnailUrl, iconUrl };
+      } catch (e) {
+        return { thumbnailUrl: null, iconUrl: null };
+      }
+    }
+
     // Config is loaded from config.json — edit that file to update the site.
     fetch('config.json')
       .then(r => r.json())
       .then(C => init(C))
       .catch(err => console.error('Could not load config.json:', err));
 
-    function init(C) {
+    async function init(C) {
       // Nav status
       const dot = document.getElementById('nav-status-dot');
       dot.classList.add(C.status);
@@ -481,6 +576,13 @@
       document.getElementById('hero-tagline').textContent = C.tagline;
       document.getElementById('hero-cta').href = C.keySystemUrl;
 
+      // Main script loadstring
+      const mainScript = C.mainScript || '';
+      document.getElementById('main-script-code').textContent = mainScript;
+      document.getElementById('main-script-copy-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(mainScript).then(() => showToast('✦ Loadstring copied'));
+      });
+
       // Footer
       document.getElementById('footer-logo').textContent = C.siteName;
       document.getElementById('footer-author').textContent = C.author;
@@ -489,31 +591,59 @@
       // Games
       const gamesGrid = document.getElementById('games-grid');
       if (!C.games || C.games.length === 0) {
-        gamesGrid.innerHTML = `<p style="color:var(--muted);font-size:14px;text-align:center;grid-column:1/-1;padding:40px 0">No scripts available yet — check back soon.</p>`;
+        gamesGrid.innerHTML = `<p style="color:var(--muted);font-size:14px;text-align:center;grid-column:1/-1;padding:40px 0">No games available yet — check back soon.</p>`;
       } else {
+        // Render cards with placeholders first, then fill images async
         C.games.forEach(game => {
           const ls = `loadstring(game:HttpGet("${game.scriptUrl}"))()`;
           const statusLabel = { active:'Active', beta:'Beta', updating:'Updating', coming_soon:'Coming Soon' }[game.status] || game.status;
+
           gamesGrid.innerHTML += `
-            <div class="game-card">
-              <div class="game-card-header">
-                <div class="game-icon">${game.icon}</div>
-                <div>
-                  <div class="game-info-name">${game.shortName}</div>
-                  <div class="game-info-short">${game.name}</div>
-                </div>
-                <span class="game-status-badge ${game.status}">${statusLabel}</span>
+            <div class="game-card" id="gcard-${game.id}">
+              <div class="game-thumbnail-wrap" id="gthumb-${game.id}">
+                <div class="game-thumbnail-placeholder">🎮</div>
+                <div class="game-thumbnail-overlay"></div>
               </div>
-              <p class="game-desc">${game.description}</p>
-              <div class="game-features">${game.features.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
-              <button class="copy-script-btn" onclick="copyScript('${game.id}', \`${ls}\`)">
-                <div>
-                  <span class="copy-script-label">Execute in Roblox</span>
-                  <span class="copy-script-text">${ls}</span>
+              <div class="game-icon-pin" id="gicon-${game.id}">
+                <div class="game-icon-pin-placeholder">🎮</div>
+              </div>
+              <div class="game-card-body">
+                <div class="game-card-header">
+                  <div class="game-info">
+                    <div class="game-info-name">${game.name}</div>
+                    <div class="game-info-short">${game.shortName}</div>
+                  </div>
+                  <span class="game-status-badge ${game.status}">${statusLabel}</span>
                 </div>
-                <span class="copy-script-icon" id="csi-${game.id}">⎘</span>
-              </button>
+                <p class="game-desc">${game.description}</p>
+                <div class="game-features">${game.features.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
+                <button class="copy-script-btn" onclick="copyScript('${game.id}', \`${ls}\`)">
+                  <div>
+                    <span class="copy-script-label">Execute in Roblox</span>
+                    <span class="copy-script-text">${ls}</span>
+                  </div>
+                  <span class="copy-script-icon" id="csi-${game.id}">⎘</span>
+                </button>
+              </div>
             </div>`;
+
+          // Async: load Roblox images and replace placeholders
+          if (game.placeId) {
+            getRobloxImages(game.placeId).then(({ thumbnailUrl, iconUrl }) => {
+              if (thumbnailUrl) {
+                const thumbWrap = document.getElementById(`gthumb-${game.id}`);
+                if (thumbWrap) {
+                  thumbWrap.innerHTML = `<img src="${thumbnailUrl}" alt="${game.name}" loading="lazy"><div class="game-thumbnail-overlay"></div>`;
+                }
+              }
+              if (iconUrl) {
+                const iconPin = document.getElementById(`gicon-${game.id}`);
+                if (iconPin) {
+                  iconPin.innerHTML = `<img src="${iconUrl}" alt="${game.name} icon" loading="lazy">`;
+                }
+              }
+            });
+          }
         });
       }
 
@@ -565,12 +695,17 @@
 
     function copyScript(id, text) {
       navigator.clipboard.writeText(text).then(() => {
-        const icon = document.getElementById('csi-'+id);
-        icon.textContent = '✓';
-        const t = document.getElementById('toast');
-        t.classList.add('show');
-        setTimeout(() => { t.classList.remove('show'); icon.textContent = '⎘'; }, 2200);
+        document.getElementById('csi-'+id).textContent = '✓';
+        showToast('✦ Script copied to clipboard');
+        setTimeout(() => { document.getElementById('csi-'+id).textContent = '⎘'; }, 2200);
       });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
     }
 
     // ── Star field ──
