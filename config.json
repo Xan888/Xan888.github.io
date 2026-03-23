@@ -1,7 +1,7 @@
 {
-  "_comment": "XAN'S HUB — SITE CONFIG.",
+  "_comment": "XAN LABS — SITE CONFIG.",
 
-  "siteName": "Xan's Hub",
+  "siteName": "Xan Labs",
   "tagline": "The most powerful Roblox script hub.",
   "version": "v1.0.0",
   "author": "Xan",
@@ -17,7 +17,7 @@
   "keySystemUrl":  "/keysystem",
   "keySuccessUrl": "/keysystem/success",
 
-  "mainScript": "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/Xan888/XanHub/refs/heads/main/init.lua\"))()",
+  "mainScript": "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/Xan888/XanLabs/refs/heads/main/init.lua\"))()",
 
   "games": [
     {
@@ -67,7 +67,7 @@
     },
     {
       "q": "Where do I paste the key?",
-      "a": "Paste it into the Xan's Hub UI when prompted after running the loadstring script in Roblox."
+      "a": "Paste it into the Xan Labs UI when prompted after running the loadstring script in Roblox."
     }
   ],
 
