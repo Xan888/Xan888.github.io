@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xan's Hub</title>
+  <title>Xan Labs</title>
+  <link rel="icon" type="image/png" href="assets/logo.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:           #05070a;
-      --surface:      #0c0f14;
-      --border:       rgba(160,175,195,0.1);
-      --border-hover: rgba(160,175,195,0.22);
-      --accent:       #a0afbf;
-      --accent-bright:#c8d6e0;
-      --accent-dim:   rgba(160,175,195,0.35);
-      --text:         #cdd5de;
-      --muted:        #4a5568;
-      --steel:        #6b7f8f;
+      --bg:           #09060f;
+      --surface:      #100d1a;
+      --border:       rgba(160,100,255,0.1);
+      --border-hover: rgba(160,100,255,0.28);
+      --accent:       #a855f7;
+      --accent-bright:#c084fc;
+      --accent-dim:   rgba(168,85,247,0.35);
+      --accent-deep:  #7c3aed;
+      --text:         #e2d9f3;
+      --muted:        #6b5f85;
+      --steel:        #9878c4;
       --success:      #6aab7e;
       --warning:      #a09060;
       --error:        #a06a6a;
@@ -32,8 +34,8 @@
     .bg-grid {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background-image:
-        linear-gradient(rgba(160,175,195,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(160,175,195,0.025) 1px, transparent 1px);
+        linear-gradient(rgba(168,85,247,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168,85,247,0.03) 1px, transparent 1px);
       background-size: 60px 60px;
       animation: gridDrift 24s linear infinite;
     }
@@ -41,9 +43,15 @@
     .bg-glow { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
     .bg-glow::before {
       content: ''; position: absolute; top: -15%; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 800px;
-      background: radial-gradient(circle, rgba(100,130,155,0.07) 0%, transparent 70%);
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
       animation: pulse 7s ease-in-out infinite;
+    }
+    .bg-glow::after {
+      content: ''; position: absolute; bottom: 10%; right: 10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%);
+      animation: pulse 9s ease-in-out infinite reverse;
     }
     @keyframes pulse {
       0%,100% { opacity:.5; transform:translateX(-50%) scale(1); }
@@ -51,11 +59,11 @@
     }
     .vignette {
       position: fixed; inset: 0; z-index: 2; pointer-events: none;
-      background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.72) 100%);
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.8) 100%);
     }
     .scanlines {
       position: fixed; inset: 0; z-index: 999; pointer-events: none;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.018) 2px, rgba(0,0,0,0.018) 4px);
     }
 
     /* ── Nav ── */
@@ -63,22 +71,31 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 18px 40px;
-      background: rgba(5,7,10,0.75);
+      background: rgba(9,6,15,0.8);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(16px);
     }
     .nav-logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      height: 32px; width: auto;
+      filter: drop-shadow(0 0 8px rgba(168,85,247,0.4));
+    }
+    .nav-logo-text {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 22px; letter-spacing: 0.08em;
-      color: var(--accent-bright); text-decoration: none;
+      color: var(--accent-bright);
     }
+    .nav-logo-text span { color: var(--accent); }
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-links a {
       font-size: 12px; font-weight: 500; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--muted); text-decoration: none;
       transition: color .2s;
     }
-    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover { color: var(--accent-bright); }
     .nav-status { display: flex; align-items: center; gap: 8px; }
     .status-dot {
       width: 7px; height: 7px; border-radius: 50%;
@@ -99,9 +116,14 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center; padding: 120px 24px 80px;
     }
-    .hero-badge {
+    .hero-logo {
+      width: clamp(80px, 14vw, 130px); height: auto;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 0 32px rgba(168,85,247,0.5));
+      opacity: 0; animation: fadeUp .6s .05s forwards;
+    }
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(160,175,195,0.06); border: 1px solid rgba(160,175,195,0.15);
+      background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.2);
       border-radius: 999px; padding: 6px 18px;
       font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--steel); margin-bottom: 32px;
@@ -109,7 +131,7 @@
     }
     .hero-badge-dot {
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent); box-shadow: 0 0 6px var(--accent-dim);
+      background: var(--accent); box-shadow: 0 0 8px var(--accent-dim);
       animation: blink 2.5s ease-in-out infinite;
     }
     .hero-heading {
@@ -149,8 +171,8 @@
       color: var(--muted); margin-bottom: 10px; text-align: center;
     }
     .main-script-box {
-      display: flex; align-items: center; gap: 0;
-      background: rgba(160,175,195,.04); border: 1px solid var(--border);
+      display: flex; align-items: center;
+      background: rgba(168,85,247,.05); border: 1px solid var(--border);
       border-radius: 12px; overflow: hidden;
       transition: border-color .2s;
     }
@@ -163,37 +185,37 @@
     }
     .main-script-copy {
       flex-shrink: 0; padding: 14px 18px;
-      background: rgba(160,175,195,.06); border: none; border-left: 1px solid var(--border);
+      background: rgba(168,85,247,.08); border: none; border-left: 1px solid var(--border);
       color: var(--muted); font-size: 15px; cursor: pointer;
       transition: color .2s, background .2s;
     }
-    .main-script-copy:hover { color: var(--accent-bright); background: rgba(160,175,195,.1); }
+    .main-script-copy:hover { color: var(--accent-bright); background: rgba(168,85,247,.15); }
 
     /* ── Buttons ── */
     .btn-primary {
       display: inline-flex; align-items: center; gap: 10px;
       padding: 16px 32px;
-      background: linear-gradient(135deg, #8fa0b0 0%, #4a5e6e 100%);
-      color: #05070a; font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: #fff; font-family: 'DM Sans', sans-serif;
       font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
       text-decoration: none; border-radius: 10px;
       transition: transform .2s, filter .2s;
     }
-    .btn-primary:hover { transform: translateY(-2px) scale(1.01); filter: brightness(1.1); }
+    .btn-primary:hover { transform: translateY(-2px) scale(1.01); filter: brightness(1.15); }
     .btn-primary:active { transform: scale(.99); }
     .btn-icon-wrap {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px; background: rgba(0,0,0,.18);
+      width: 24px; height: 24px; background: rgba(255,255,255,.15);
       border-radius: 6px; font-size: 13px; transition: transform .2s;
     }
     .btn-primary:hover .btn-icon-wrap { transform: rotate(45deg); }
     .btn-primary-wrap { position: relative; display: inline-block; }
     .btn-primary-glow {
       position: absolute; inset: -3px; border-radius: 13px;
-      background: linear-gradient(135deg, #6b7f8f, #3a4a58);
-      filter: blur(14px); opacity: 0.35; transition: opacity .3s; z-index: 0; pointer-events: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      filter: blur(14px); opacity: 0.4; transition: opacity .3s; z-index: 0; pointer-events: none;
     }
-    .btn-primary-wrap:hover .btn-primary-glow { opacity: 0.65; }
+    .btn-primary-wrap:hover .btn-primary-glow { opacity: 0.75; }
     .btn-primary-wrap .btn-primary { position: relative; z-index: 1; }
     .btn-secondary {
       display: inline-flex; align-items: center; gap: 10px;
@@ -204,14 +226,14 @@
       text-decoration: none; border-radius: 10px;
       transition: border-color .2s, background .2s, transform .2s;
     }
-    .btn-secondary:hover { border-color: var(--accent); background: rgba(160,175,195,.05); transform: translateY(-2px); }
+    .btn-secondary:hover { border-color: var(--accent); background: rgba(168,85,247,.07); transform: translateY(-2px); }
 
     /* ── Section header ── */
     .section-header { text-align: center; margin-bottom: 48px; }
     .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
     .section-title {
       font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 6vw, 56px); letter-spacing: .04em;
-      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      background: linear-gradient(135deg, #fff 0%, var(--accent-bright) 60%, var(--accent) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
 
@@ -220,33 +242,32 @@
     .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .game-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden;
-      position: relative;
+      border-radius: 16px; overflow: hidden; position: relative;
       transition: border-color .3s, transform .25s;
     }
     .game-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .game-card:hover::after {
+      content: ''; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
+      box-shadow: inset 0 0 30px rgba(168,85,247,0.04);
+    }
 
-    /* Game thumbnail banner */
     .game-thumbnail-wrap {
       width: 100%; height: 160px; overflow: hidden;
-      position: relative; background: rgba(160,175,195,.04);
+      position: relative; background: rgba(168,85,247,.04);
     }
     .game-thumbnail-wrap img {
       width: 100%; height: 100%; object-fit: cover;
-      transition: transform .4s ease;
-      display: block;
+      transition: transform .4s ease; display: block;
     }
     .game-card:hover .game-thumbnail-wrap img { transform: scale(1.04); }
     .game-thumbnail-wrap .game-thumbnail-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 40%, rgba(12,15,20,0.95) 100%);
+      background: linear-gradient(to bottom, transparent 40%, rgba(16,13,26,0.95) 100%);
     }
     .game-thumbnail-placeholder {
       width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      font-size: 40px; background: rgba(160,175,195,.04);
+      font-size: 40px; background: rgba(168,85,247,.04);
     }
-
-    /* Icon pinned over thumbnail */
     .game-icon-pin {
       position: absolute; bottom: -20px; left: 20px;
       width: 52px; height: 52px; border-radius: 12px;
@@ -256,7 +277,7 @@
     .game-icon-pin img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .game-icon-pin-placeholder {
       width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      font-size: 22px; background: rgba(160,175,195,.06);
+      font-size: 22px; background: rgba(168,85,247,.06);
     }
 
     .game-card-body { padding: 32px 22px 22px; }
@@ -271,15 +292,14 @@
     .game-status-badge.active      { color:var(--success); background:rgba(106,171,126,.1); border:1px solid rgba(106,171,126,.2); }
     .game-status-badge.beta        { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
     .game-status-badge.updating    { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
-    .game-status-badge.coming_soon { color:var(--muted);   background:rgba(74,86,104,.1);   border:1px solid rgba(74,86,104,.2); }
+    .game-status-badge.coming_soon { color:var(--muted);   background:rgba(107,95,133,.1);  border:1px solid rgba(107,95,133,.2); }
     .game-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
     .game-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .feature-tag {
       font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--steel); background: rgba(160,175,195,.05);
-      border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px;
+      color: var(--accent); background: rgba(168,85,247,.07);
+      border: 1px solid rgba(168,85,247,.18); padding: 4px 12px; border-radius: 6px;
     }
-
 
     /* ── Changelog ── */
     #changelog { padding: 100px 0; }
@@ -303,7 +323,7 @@
     .changelog-version { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.05em; color:var(--accent-bright); }
     .changelog-label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; padding:3px 9px; border-radius:999px; }
     .changelog-label.release { color:var(--success); background:rgba(106,171,126,.1); border:1px solid rgba(106,171,126,.2); }
-    .changelog-label.update  { color:var(--accent);  background:rgba(160,175,195,.08); border:1px solid var(--border); }
+    .changelog-label.update  { color:var(--accent);  background:rgba(168,85,247,.08); border:1px solid rgba(168,85,247,.2); }
     .changelog-label.fix     { color:var(--warning); background:rgba(160,144,96,.1);  border:1px solid rgba(160,144,96,.2); }
     .changelog-label.hotfix  { color:var(--error);   background:rgba(160,106,106,.1); border:1px solid rgba(160,106,106,.2); }
     .changelog-date { font-size:11px; color:var(--muted); margin-left:auto; }
@@ -322,51 +342,45 @@
     }
     .faq-chevron { flex-shrink:0; font-size:16px; color:var(--muted); transition:transform .3s; }
     .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-item.open { border-color: rgba(168,85,247,0.25); }
     .faq-answer {
       max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .35s ease;
       font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.7; padding: 0 22px;
     }
     .faq-item.open .faq-answer { max-height: 200px; padding: 0 22px 18px; }
 
-    /* ── Key System section ── */
+    /* ── Key System ── */
     #keysystem { padding: 100px 0; }
     .keysystem-inner {
       max-width: 680px; margin: 0 auto;
       display: flex; flex-direction: column; align-items: center; text-align: center;
     }
     .keysystem-card {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 40px;
-      position: relative; overflow: hidden;
-      transition: border-color .3s;
-      margin-bottom: 32px;
+      width: 100%; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 18px;
+      padding: 40px; position: relative; overflow: hidden;
+      transition: border-color .3s; margin-bottom: 32px;
     }
     .keysystem-card:hover { border-color: var(--border-hover); }
     .keysystem-card::before {
       content: ''; position: absolute; top:0; left:0; right:0; height:1px;
       background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
     }
-    .keysystem-steps {
-      display: flex; flex-direction: column; gap: 14px;
-      margin-bottom: 32px; text-align: left;
-    }
+    .keysystem-steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; text-align: left; }
     .keysystem-step {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 16px;
-      background: rgba(160,175,195,0.02);
+      background: rgba(168,85,247,0.03);
       border: 1px solid var(--border); border-radius: 12px;
       font-size: 13px; color: var(--muted);
       transition: border-color .3s, background .3s;
     }
-    .keysystem-step:hover { border-color: var(--border-hover); background: rgba(160,175,195,.04); }
+    .keysystem-step:hover { border-color: var(--border-hover); background: rgba(168,85,247,.06); }
     .keysystem-step-num {
       width: 28px; height: 28px; border-radius: 8px;
-      background: rgba(160,175,195,.06); border: 1px solid rgba(160,175,195,.14);
+      background: rgba(168,85,247,.1); border: 1px solid rgba(168,85,247,.2);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; color: var(--steel);
+      font-size: 11px; font-weight: 600; color: var(--accent);
       flex-shrink: 0; letter-spacing: .05em;
     }
     .keysystem-faq { width: 100%; display: flex; flex-direction: column; gap: 12px; text-align: left; }
@@ -380,7 +394,7 @@
       max-width: 1080px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
-    .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.08em; color:var(--steel); }
+    .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.08em; color: var(--accent); }
     .footer-note { font-size:12px; color:var(--muted); font-weight:300; letter-spacing:.04em; }
     .footer-version { font-size:11px; color:var(--muted); letter-spacing:.1em; }
 
@@ -388,8 +402,8 @@
     .toast {
       position: fixed; bottom: 32px; left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: var(--surface); border: 1px solid rgba(106,171,126,.3);
-      color: var(--success); font-size: 13px; font-weight: 500;
+      background: var(--surface); border: 1px solid rgba(168,85,247,.35);
+      color: var(--accent-bright); font-size: 13px; font-weight: 500;
       letter-spacing: .08em; padding: 12px 24px; border-radius: 999px;
       opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; z-index: 1000;
     }
@@ -418,7 +432,10 @@
   <div class="scanlines"></div>
 
   <nav>
-    <a class="nav-logo" href="#">Xan's Hub</a>
+    <a class="nav-logo" href="#">
+      <img src="assets/logo-icon.png" alt="Xan Labs icon" onerror="this.style.display='none'"/>
+      <span class="nav-logo-text">Xan <span>Labs</span></span>
+    </a>
     <div class="nav-links">
       <a href="#games">Games</a>
       <a href="#changelog">Changelog</a>
@@ -432,24 +449,27 @@
   </nav>
 
   <section id="hero">
+    <img class="hero-logo" src="assets/logo.png" alt="Xan Labs" onerror="this.style.display='none'"/>
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
       <span id="hero-badge-label"></span>
     </div>
     <h1 class="hero-heading">
-      <span class="line1">Xan's Hub</span>
+      <span class="line1">Xan Labs</span>
       <span class="line2" id="hero-tagline"></span>
     </h1>
     <p class="hero-sub">Free, powerful Roblox scripts. Get your key in seconds and start dominating.</p>
     <div class="hero-actions">
-      <a class="btn-primary" id="hero-cta" href="#">
-        <span class="btn-icon-wrap">✦</span>
-        Get Your Key
-      </a>
+      <div class="btn-primary-wrap">
+        <a class="btn-primary" id="hero-cta" href="#">
+          <span class="btn-icon-wrap">✦</span>
+          Get Your Key
+        </a>
+        <div class="btn-primary-glow"></div>
+      </div>
       <a class="btn-secondary" href="#games">View Games</a>
     </div>
 
-    <!-- Main loadstring -->
     <div class="main-script-banner">
       <p class="main-script-label">Universal Loadstring — Execute in any game</p>
       <div class="main-script-box">
@@ -519,30 +539,21 @@
   <div class="toast" id="toast">✦ Copied to clipboard</div>
 
   <script>
-    // ── Roblox thumbnail fetcher ──
-    // RoTunnel is a community Roblox API proxy — just replace
-    // 'roblox.com' with 'rotunnel.com' for full CORS support.
     async function getRobloxImages(placeId) {
       try {
-        // Step 1: placeId → universeId
         const uRes = await fetch(`https://apis.rotunnel.com/universes/v1/places/${placeId}/universe`);
         if (!uRes.ok) throw new Error('universe fetch failed');
         const uData = await uRes.json();
         const universeId = uData.universeId;
         if (!universeId) throw new Error('no universeId');
-
-        // Step 2: fetch thumbnail (banner) and icon in parallel
         const [thumbRes, iconRes] = await Promise.all([
           fetch(`https://thumbnails.rotunnel.com/v1/games/multiget/thumbnails?universeIds=${universeId}&countPerUniverse=1&defaults=true&size=768x432&format=Png`),
           fetch(`https://thumbnails.rotunnel.com/v1/games/icons?universeIds=${universeId}&returnPolicy=PlaceHolder&size=150x150&format=Png`)
         ]);
-
         const thumbData = await thumbRes.json();
         const iconData  = await iconRes.json();
-
         const thumbnailUrl = thumbData?.data?.[0]?.thumbnails?.[0]?.imageUrl || null;
         const iconUrl      = iconData?.data?.[0]?.imageUrl || null;
-
         return { thumbnailUrl, iconUrl };
       } catch (e) {
         console.warn('Roblox image fetch failed:', e);
@@ -550,44 +561,36 @@
       }
     }
 
-    // Config is loaded from config.json — edit that file to update the site.
     fetch('config.json')
       .then(r => r.json())
       .then(C => init(C))
       .catch(err => console.error('Could not load config.json:', err));
 
     async function init(C) {
-      // Nav status
       const dot = document.getElementById('nav-status-dot');
       dot.classList.add(C.status);
       document.getElementById('nav-status-text').textContent = C.statusMessages[C.status];
 
-      // Hero
       document.getElementById('hero-badge-label').textContent = C.version + ' — ' + C.statusMessages[C.status];
       document.getElementById('hero-tagline').textContent = C.tagline;
       document.getElementById('hero-cta').href = C.keySystemUrl;
 
-      // Main script loadstring
       const mainScript = C.mainScript || '';
       document.getElementById('main-script-code').textContent = mainScript;
       document.getElementById('main-script-copy-btn').addEventListener('click', () => {
         navigator.clipboard.writeText(mainScript).then(() => showToast('✦ Loadstring copied'));
       });
 
-      // Footer
       document.getElementById('footer-logo').textContent = C.siteName;
       document.getElementById('footer-author').textContent = C.author;
       document.getElementById('footer-version').textContent = C.version;
 
-      // Games
       const gamesGrid = document.getElementById('games-grid');
       if (!C.games || C.games.length === 0) {
         gamesGrid.innerHTML = `<p style="color:var(--muted);font-size:14px;text-align:center;grid-column:1/-1;padding:40px 0">No games available yet — check back soon.</p>`;
       } else {
-        // Render cards with placeholders first, then fill images async
         C.games.forEach(game => {
           const statusLabel = { active:'Active', beta:'Beta', updating:'Updating', coming_soon:'Coming Soon' }[game.status] || game.status;
-
           gamesGrid.innerHTML += `
             <div class="game-card" id="gcard-${game.id}">
               <div class="game-thumbnail-wrap" id="gthumb-${game.id}">
@@ -609,28 +612,21 @@
                 <div class="game-features">${game.features.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
               </div>
             </div>`;
-
-          // Async: load Roblox images and replace placeholders
           if (game.placeId) {
             getRobloxImages(game.placeId).then(({ thumbnailUrl, iconUrl }) => {
               if (thumbnailUrl) {
                 const thumbWrap = document.getElementById(`gthumb-${game.id}`);
-                if (thumbWrap) {
-                  thumbWrap.innerHTML = `<img src="${thumbnailUrl}" alt="${game.name}" loading="lazy"><div class="game-thumbnail-overlay"></div>`;
-                }
+                if (thumbWrap) thumbWrap.innerHTML = `<img src="${thumbnailUrl}" alt="${game.name}" loading="lazy"><div class="game-thumbnail-overlay"></div>`;
               }
               if (iconUrl) {
                 const iconPin = document.getElementById(`gicon-${game.id}`);
-                if (iconPin) {
-                  iconPin.innerHTML = `<img src="${iconUrl}" alt="${game.name} icon" loading="lazy">`;
-                }
+                if (iconPin) iconPin.innerHTML = `<img src="${iconUrl}" alt="${game.name} icon" loading="lazy">`;
               }
             });
           }
         });
       }
 
-      // Changelog
       const cl = document.getElementById('changelog-list');
       C.changelog.slice(0, 6).forEach(e => {
         cl.innerHTML += `
@@ -647,7 +643,6 @@
           </div>`;
       });
 
-      // Key system
       document.getElementById('keysystem-cta').href = C.keySystemUrl || '/key-system';
       const ksf = document.getElementById('keysystem-faq');
       (C.keySystemFaq || []).forEach((item, i) => {
@@ -660,7 +655,6 @@
           </div>`;
       });
 
-      // FAQ
       const fl = document.getElementById('faq-list');
       C.faq.forEach((item, i) => {
         fl.innerHTML += `
@@ -696,6 +690,7 @@
         phase:Math.random()*Math.PI*2,
         speed:Math.random()*.003+.001,
         drift:(Math.random()-.5)*.04,
+        purple: Math.random() > 0.6,
       });
     }
     function draw(t) {
@@ -703,7 +698,8 @@
       for(const s of stars){
         const a=.1+.5*(.5+.5*Math.sin(s.phase+t*s.speed*60));
         ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle=`rgba(185,200,215,${a})`; ctx.fill();
+        ctx.fillStyle = s.purple ? `rgba(168,85,247,${a * 0.7})` : `rgba(210,190,255,${a})`;
+        ctx.fill();
         s.x+=s.drift;
         if(s.x<0)s.x=W; if(s.x>W)s.x=0;
       }
