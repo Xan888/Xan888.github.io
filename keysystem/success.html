@@ -3,364 +3,200 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Key — Xan's Hub</title>
+  <title>Your Key — Xan Labs</title>
+  <link rel="icon" type="image/png" href="../assets/logo.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:           #05070a;
-      --surface:      #0c0f14;
-      --border:       rgba(160,175,195,0.1);
-      --border-hover: rgba(160,175,195,0.22);
-      --accent:       #a0afbf;
-      --accent-bright:#c8d6e0;
-      --accent-dim:   rgba(160,175,195,0.35);
-      --text:         #cdd5de;
-      --muted:        #4a5568;
-      --steel:        #6b7f8f;
+      --bg:           #09060f;
+      --surface:      #100d1a;
+      --border:       rgba(160,100,255,0.1);
+      --border-hover: rgba(160,100,255,0.28);
+      --accent:       #a855f7;
+      --accent-bright:#c084fc;
+      --accent-dim:   rgba(168,85,247,0.35);
+      --accent-deep:  #7c3aed;
+      --text:         #e2d9f3;
+      --muted:        #6b5f85;
+      --steel:        #9878c4;
       --success:      #6aab7e;
       --success-dim:  rgba(106,171,126,0.15);
       --error:        #a06a6a;
       --error-dim:    rgba(160,106,106,0.15);
     }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      overflow-x: hidden;
-    }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
 
-    /* ── Star field ── */
-    #stars {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* ── Grid overlay ── */
     .bg-grid {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image:
-        linear-gradient(rgba(160,175,195,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(160,175,195,0.025) 1px, transparent 1px);
+        linear-gradient(rgba(168,85,247,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168,85,247,0.03) 1px, transparent 1px);
       background-size: 60px 60px;
       animation: gridDrift 24s linear infinite;
-      pointer-events: none;
-      z-index: 1;
+      pointer-events: none; z-index: 1;
     }
-    @keyframes gridDrift {
-      0%   { background-position: 0 0; }
-      100% { background-position: 60px 60px; }
-    }
+    @keyframes gridDrift { 100% { background-position: 60px 60px; } }
 
-    /* ── Glow blobs ── */
-    .bg-glow {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
+    .bg-glow { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
     .bg-glow::before {
-      content: '';
-      position: absolute;
-      top: -15%; left: 50%;
-      transform: translateX(-50%);
+      content: ''; position: absolute; top: -15%; left: 50%; transform: translateX(-50%);
       width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(100,130,155,0.07) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
       animation: pulse 7s ease-in-out infinite;
     }
     .bg-glow::after {
-      content: '';
-      position: absolute;
-      bottom: -10%; right: 5%;
+      content: ''; position: absolute; bottom: -10%; right: 5%;
       width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(80,100,120,0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 70%);
       animation: pulse 9s ease-in-out infinite reverse;
     }
     @keyframes pulse {
-      0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
-      50%       { opacity: 1;   transform: translateX(-50%) scale(1.1); }
+      0%,100% { opacity:.5; transform:translateX(-50%) scale(1); }
+      50%      { opacity:1;  transform:translateX(-50%) scale(1.1); }
     }
 
-    /* ── Vignette ── */
-    .vignette {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.7) 100%);
-      pointer-events: none;
-      z-index: 2;
-    }
+    .vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.8) 100%); pointer-events: none; z-index: 2; }
+    .scanlines { position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.018) 2px, rgba(0,0,0,0.018) 4px); pointer-events: none; z-index: 999; }
 
-    /* ── Scanlines ── */
-    .scanlines {
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent, transparent 2px,
-        rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* ── Layout ── */
     .wrapper {
-      position: relative;
-      z-index: 3;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      position: relative; z-index: 3; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 60px 20px;
     }
 
-    /* ── Badge ── */
+    .back-link {
+      position: fixed; top: 24px; left: 32px; z-index: 10;
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color .2s;
+    }
+    .back-link:hover { color: var(--accent-bright); }
+
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(106,171,126,0.08);
-      border: 1px solid rgba(106,171,126,0.2);
-      border-radius: 999px;
-      padding: 6px 18px;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--success);
-      margin-bottom: 32px;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.1s forwards;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(106,171,126,0.08); border: 1px solid rgba(106,171,126,0.2);
+      border-radius: 999px; padding: 6px 18px;
+      font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--success); margin-bottom: 32px;
+      opacity: 0; animation: fadeUp .6s .1s forwards;
     }
     .badge-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 7px rgba(106,171,126,0.6);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--success); box-shadow: 0 0 7px rgba(106,171,126,.6);
     }
 
-    /* ── Heading ── */
     .heading {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(52px, 10vw, 96px);
-      line-height: 0.93;
-      letter-spacing: 0.03em;
-      text-align: center;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 0.7s 0.25s forwards;
+      font-size: clamp(52px, 10vw, 96px); line-height: .93;
+      letter-spacing: .03em; text-align: center; margin-bottom: 24px;
+      opacity: 0; animation: fadeUp .7s .25s forwards;
     }
     .heading .line1 {
       display: block;
-      background: linear-gradient(135deg, #ffffff 0%, var(--accent-bright) 50%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-bright) 50%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .heading .line2 {
-      display: block;
-      font-size: clamp(28px, 5vw, 48px);
+      display: block; font-size: clamp(28px, 5vw, 48px);
       background: linear-gradient(135deg, var(--muted) 0%, var(--steel) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 0.06em;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      letter-spacing: .06em;
     }
 
-    /* ── Subtext ── */
     .subtext {
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--muted);
-      max-width: 380px;
-      text-align: center;
-      line-height: 1.7;
-      margin-bottom: 40px;
-      opacity: 0;
-      animation: fadeUp 0.7s 0.4s forwards;
+      font-size: 15px; font-weight: 300; color: var(--muted);
+      max-width: 380px; text-align: center; line-height: 1.7; margin-bottom: 40px;
+      opacity: 0; animation: fadeUp .7s .4s forwards;
     }
 
-    /* ── Card ── */
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%;
-      max-width: 520px;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      animation: fadeUp 0.7s 0.55s forwards;
-      transition: border-color 0.4s;
-      backdrop-filter: blur(8px);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px; width: 100%; max-width: 520px;
+      position: relative; overflow: hidden;
+      opacity: 0; animation: fadeUp .7s .55s forwards;
+      transition: border-color .4s; backdrop-filter: blur(8px);
     }
     .card:hover { border-color: var(--border-hover); }
     .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
     }
 
-    /* ── Key display ── */
     .key-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 12px;
-      text-align: left;
+      font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px; text-align: left;
     }
     .key-box {
-      background: rgba(160,175,195,0.04);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 22px;
+      background: rgba(168,85,247,0.04); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 22px;
       font-family: 'DM Mono', 'Fira Code', 'Courier New', monospace;
-      font-size: 15px;
-      word-break: break-all;
-      color: var(--accent-bright);
-      line-height: 1.6;
-      text-align: left;
-      margin-bottom: 28px;
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.3s;
-      position: relative;
-      overflow: hidden;
+      font-size: 15px; word-break: break-all; color: var(--accent-bright);
+      line-height: 1.6; text-align: left; margin-bottom: 28px;
+      min-height: 64px; display: flex; align-items: center;
+      transition: border-color .3s; position: relative; overflow: hidden;
     }
     .key-box::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: linear-gradient(180deg, var(--steel), transparent);
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--accent), transparent);
       border-radius: 12px 0 0 12px;
     }
     .key-box.error {
-      color: var(--error);
-      border-color: rgba(160,106,106,0.2);
+      color: var(--error); border-color: rgba(160,106,106,.2);
       background: var(--error-dim);
     }
-    .key-box.error::before {
-      background: linear-gradient(180deg, var(--error), transparent);
-    }
+    .key-box.error::before { background: linear-gradient(180deg, var(--error), transparent); }
     .key-text { flex: 1; }
 
-    /* ── Copy button ── */
     .btn-wrap { position: relative; }
     .btn-glow {
-      position: absolute;
-      inset: -3px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #6b7f8f, #3a4a58);
-      filter: blur(14px);
-      opacity: 0.35;
-      transition: opacity 0.3s;
-      z-index: 0;
+      position: absolute; inset: -3px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      filter: blur(14px); opacity: .4; transition: opacity .3s; z-index: 0;
     }
-    .btn-wrap:hover .btn-glow { opacity: 0.6; }
-
+    .btn-wrap:hover .btn-glow { opacity: .75; }
     .btn {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      width: 100%;
-      padding: 18px 32px;
-      background: linear-gradient(135deg, #8fa0b0 0%, #4a5e6e 100%);
-      color: #05070a;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s, filter 0.2s;
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; padding: 18px 32px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      border-radius: 12px; border: none; cursor: pointer;
+      transition: transform .2s, filter .2s;
     }
-    .btn:hover {
-      transform: translateY(-2px) scale(1.01);
-      filter: brightness(1.12);
-    }
-    .btn:active { transform: translateY(0) scale(0.99); }
-    .btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none;
-      filter: none;
-    }
-
+    .btn:hover { transform: translateY(-2px) scale(1.01); filter: brightness(1.12); }
+    .btn:active { transform: translateY(0) scale(.99); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; filter: none; }
     .btn-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px; height: 26px;
-      background: rgba(0,0,0,0.18);
-      border-radius: 6px;
-      font-size: 13px;
-      transition: transform 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; background: rgba(255,255,255,.15);
+      border-radius: 6px; font-size: 13px; transition: transform .2s;
     }
     .btn:hover:not(:disabled) .btn-icon { transform: scale(1.15); }
 
-    /* ── Copied toast ── */
     .toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
+      position: fixed; bottom: 32px; left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: var(--surface);
-      border: 1px solid rgba(106,171,126,0.3);
-      color: var(--success);
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      padding: 12px 24px;
-      border-radius: 999px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s, transform 0.3s;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: var(--surface); border: 1px solid rgba(168,85,247,.35);
+      color: var(--accent-bright); font-size: 13px; font-weight: 500;
+      letter-spacing: .08em; padding: 12px 24px; border-radius: 999px;
+      opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; z-index: 1000;
+      display: flex; align-items: center; gap: 8px;
     }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── Note ── */
     .note {
-      margin-top: 26px;
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.75s forwards;
-      letter-spacing: 0.04em;
-      font-weight: 300;
+      margin-top: 26px; font-size: 12px; color: var(--muted); text-align: center;
+      opacity: 0; animation: fadeUp .6s .75s forwards;
+      letter-spacing: .04em; font-weight: 300;
     }
 
-    /* ── Animations ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
   </style>
 </head>
 <body>
@@ -371,8 +207,9 @@
   <div class="vignette"></div>
   <div class="scanlines"></div>
 
-  <div class="wrapper">
+  <a class="back-link" href="../index.html">← Back to Hub</a>
 
+  <div class="wrapper">
     <div class="badge" id="badge">
       <span class="badge-dot"></span>
       <span id="badge-text">Checkpoint Complete</span>
@@ -380,12 +217,10 @@
 
     <h1 class="heading">
       <span class="line1">Key Received</span>
-      <span class="line2">Xan's Hub</span>
+      <span class="line2">Xan Labs</span>
     </h1>
 
-    <p class="subtext" id="subtext">
-      Copy your key below and paste it into Roblox to get started.
-    </p>
+    <p class="subtext" id="subtext">Copy your key below and paste it into Roblox to get started.</p>
 
     <div class="card">
       <div class="key-label">Your Access Key</div>
@@ -403,21 +238,19 @@
     </div>
 
     <p class="note">Paste your key inside Roblox to activate · Keep it safe</p>
-
   </div>
 
   <div class="toast" id="toast">✦ Key copied to clipboard</div>
 
   <script>
-    // ── Populate key ──
-    const params = new URLSearchParams(window.location.search);
-    const key = params.get('key');
-    const keyText = document.getElementById('key-text');
-    const keyBox  = document.getElementById('key-box');
-    const copyBtn = document.getElementById('copy-btn');
-    const badge   = document.getElementById('badge');
+    const params   = new URLSearchParams(window.location.search);
+    const key      = params.get('key');
+    const keyText  = document.getElementById('key-text');
+    const keyBox   = document.getElementById('key-box');
+    const copyBtn  = document.getElementById('copy-btn');
+    const badge    = document.getElementById('badge');
     const badgeText = document.getElementById('badge-text');
-    const subtext = document.getElementById('subtext');
+    const subtext  = document.getElementById('subtext');
 
     if (key) {
       keyText.textContent = key;
@@ -425,16 +258,15 @@
       keyText.textContent = 'No key received. Try completing the checkpoint again.';
       keyBox.classList.add('error');
       copyBtn.disabled = true;
-      badge.style.background = 'rgba(160,106,106,0.08)';
-      badge.style.borderColor = 'rgba(160,106,106,0.2)';
-      badge.style.color = 'var(--error)';
-      badge.querySelector('.badge-dot').style.background = 'var(--error)';
-      badge.querySelector('.badge-dot').style.boxShadow = '0 0 7px rgba(160,106,106,0.6)';
+      badge.style.background   = 'rgba(160,106,106,0.08)';
+      badge.style.borderColor  = 'rgba(160,106,106,0.2)';
+      badge.style.color        = 'var(--error)';
+      badge.querySelector('.badge-dot').style.background  = 'var(--error)';
+      badge.querySelector('.badge-dot').style.boxShadow   = '0 0 7px rgba(160,106,106,0.6)';
       badgeText.textContent = 'Key Not Found';
-      subtext.textContent = 'Something went wrong. Please go back and complete the checkpoint again.';
+      subtext.textContent   = 'Something went wrong. Please go back and complete the checkpoint again.';
     }
 
-    // ── Copy ──
     function copyKey() {
       if (!key) return;
       navigator.clipboard.writeText(key).then(() => {
@@ -450,45 +282,31 @@
       });
     }
 
-    // ── Star field ──
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
     let stars = [], W, H;
-
-    function resize() {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    }
-
-    function initStars(count = 260) {
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    function initStars(n = 260) {
       stars = [];
-      for (let i = 0; i < count; i++) {
-        stars.push({
-          x:     Math.random() * W,
-          y:     Math.random() * H,
-          r:     Math.random() * 1.1 + 0.15,
-          phase: Math.random() * Math.PI * 2,
-          speed: Math.random() * 0.003 + 0.001,
-          drift: (Math.random() - 0.5) * 0.045,
-        });
-      }
+      for (let i = 0; i < n; i++) stars.push({
+        x: Math.random()*W, y: Math.random()*H,
+        r: Math.random()*1.1+.15, phase: Math.random()*Math.PI*2,
+        speed: Math.random()*.003+.001, drift: (Math.random()-.5)*.045,
+        purple: Math.random() > .6,
+      });
     }
-
     function draw(t) {
-      ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0,0,W,H);
       for (const s of stars) {
-        const a = 0.12 + 0.5 * (0.5 + 0.5 * Math.sin(s.phase + t * s.speed * 60));
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(185,200,215,${a})`;
+        const a = .12+.5*(.5+.5*Math.sin(s.phase+t*s.speed*60));
+        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle = s.purple ? `rgba(168,85,247,${a*.7})` : `rgba(210,190,255,${a})`;
         ctx.fill();
         s.x += s.drift;
-        if (s.x < 0) s.x = W;
-        if (s.x > W) s.x = 0;
+        if (s.x < 0) s.x = W; if (s.x > W) s.x = 0;
       }
     }
-
-    function loop(t) { draw(t / 1000); requestAnimationFrame(loop); }
+    function loop(t) { draw(t/1000); requestAnimationFrame(loop); }
     resize(); initStars(); requestAnimationFrame(loop);
     window.addEventListener('resize', () => { resize(); initStars(); });
   </script>
