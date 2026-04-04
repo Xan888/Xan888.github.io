@@ -6,7 +6,7 @@
   "version": "v1.0.0",
   "author": "Xan",
 
-  "status": "offline",
+  "status": "online",
   "_status_options": "online | updating | offline",
   "statusMessages": {
     "online":   "All scripts up to date",
